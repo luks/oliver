@@ -1,32 +1,37 @@
-#!/usr/local/bin/ruby
+##!/usr/bin/jruby
 
-require 'dotenv'
-require 'logger'
-require "thread"
-require "pry"
+$LOAD_PATH.unshift(File.dirname(__FILE__))
 
-require_relative "server.rb"
-require_relative "modules/logger.rb"
 
-#load .env into ENV
-Dotenv.load
-$:.unshift("lib")
-$:.unshift("workers")
+#require 'dotenv'
+#require "pry"
 
-module Oliver
+require "lib/server"
+require "modules/logger"
 
-  include Logging
 
-  class Run
-    def self.server
-      server = Server.new(ENV['SERVER_PORT'])
-      server.start
-      logger.info "Server started"
-      server
-    end
-  end
-end
 
-server = Oliver::Run.server
+server = Oliver::Server.new(3333)
+
+trap(:INT) {
+  server.handler.pool.shutdown
+  exit
+}
+#ctrl-c
+# trap(:SIGINT) {
+#   puts "Ignoring SIGINT"
+# }
+
+server.logger.info "Server started"
+server.start
+
+
+
+
+
+
+
+
+
 
 

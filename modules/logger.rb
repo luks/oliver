@@ -1,11 +1,16 @@
+require 'logger'
+
 module Logging
   def self.included(base)
     class << base
       def logger
-        @logger ||= Logger.new(ENV['LOG_TO'])
+        @logger ||= Logger.new('/home/luky/Documents/ruby/wwrt-ebook/code/oliver/log/oliver.log')
       end
 
       def logger=(logger)
+        original_formatter = Logger::Formatter.new
+
+
         @logger = logger
       end
     end
