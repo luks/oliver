@@ -8,9 +8,6 @@ module Logging
       end
 
       def logger=(logger)
-        original_formatter = Logger::Formatter.new
-
-
         @logger = logger
       end
     end

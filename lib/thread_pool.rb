@@ -9,7 +9,7 @@ module Oliver
       # it is waiting for something to be pushed into storage
       # then it is proccessing it by block, so it is generic functionality
       # is defined in block on each instance
-      # Then bolck is spawned min - max times  
+      # Then bolck is spawned min - max times
       @storage = Array.new
       @mutex = Mutex.new
       # semafor to wake up threads when something is pushed into storage

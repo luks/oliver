@@ -21,23 +21,18 @@ module Oliver
 
     def ssl_server
       tcp_server = TCPServer.open(4444)
-      # Create keys:
-      # => key = OpenSSL::PKey::RSA.new 2048
-      # => open 'private_key.pem', 'w' do |io| io.write key.to_pem end
-      # => open 'public_key.pem', 'w' do |io| io.write key.public_key.to_pem end
-      #cipher = OpenSSL::Cipher.new 'AES-128-CBC'
-      #pass_phrase = "oliver server"
-
-      #key_pem     = File.read 'private_key.pem'
-      #key_secure  = OpenSSL::PKey::RSA.new key_pem, pass_phrase
-
-      #key  = OpenSSL::PKey::RSA.new key_pem File.read 'private_key.pem'
-      #cert =  OpenSSL::X509::Certificate.new File.read 'certificate.pem'
       context = OpenSSL::SSL::SSLContext.new
-      context.cert = OpenSSL::X509::Certificate.new File.read 'certificate.pem'
-      context.key  = OpenSSL::PKey::RSA.new key_pem File.read 'private_key.pem'
+
+      context.cert = OpenSSL::X509::Certificate.new File.read 'ssl/certificate.pem'
+      context.key  = OpenSSL::PKey::RSA.new File.read 'ssl/private_key.pem'
+
       ssl_server = OpenSSL::SSL::SSLServer.new tcp_server, context
-      server_loop(server)
+
+      begin
+        server_loop(ssl_server)
+      rescue OpenSSL::SSL::SSLError => e
+        logger.error "Openssl error #{e}"
+      end
     end
 
     def start
@@ -59,11 +54,9 @@ module Oliver
             client = server.accept
             sockets << client
             client.puts "Handler service v0.01 running on #{Socket.gethostname}"
-            logger.info "Accepted connection from #{client.peeraddr[2]}"
           else
             input = socket.gets
             if !input
-              logger.info "Client on #{socket.peeraddr[2]} disconnected."
               sockets.delete(socket)
               socket.close
               next

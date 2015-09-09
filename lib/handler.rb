@@ -10,12 +10,9 @@ module Oliver
   class Handler
     include Logging
     attr_accessor :pool
-    CONCURRENCY = 4
 
     def initialize
-      @queue = Queue.new
       @pool  = ThreadPool.new(1, 4) do |params|
-        #handle(*params)
         Thread.abort_on_exception=true
         a, b = params.split(":")
         par = b.split(" ")
@@ -42,56 +39,5 @@ module Oliver
       @pool.auto_reap!
     end
 
-    def handle(*job)
-      i = 0
-      1000000.times do |t|
-        i+=1
-      end
-      i
-    end
-
-    def handle2(job)
-      random_comic_url = []
-      case job
-        when "test1"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test2"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test3"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test4"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test5"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test6"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test7"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test8"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test9"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test10"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test11"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-        when "test12"
-          response = Net::HTTP.get_response('dynamic.xkcd.com', '/random/comic/')
-          random_comic_url = response['Location']
-
-        end
-       return random_comic_url
-    end
   end
 end
