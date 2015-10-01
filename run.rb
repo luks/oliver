@@ -2,8 +2,6 @@
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
-
-#require 'dotenv'
 #require "pry"
 
 require "lib/server"
@@ -17,10 +15,6 @@ trap(:INT) {
   server.handler.pool.shutdown
   exit
 }
-#ctrl-c
-# trap(:SIGINT) {
-#   puts "Ignoring SIGINT"
-# }
 
 server.logger.info "Server started"
 server.start

@@ -6,7 +6,9 @@ require "lib/handler"
 
 
 module Oliver
+
   class Server
+
     include Logging
     attr_accessor :handler
 
@@ -38,14 +40,13 @@ module Oliver
     def start
       Thread.new { tcp_server }
       Thread.new { ssl_server }
-      while true
-        sleep(1)
-      end
+      sleep
     end
 
+    #  multi-plexing server loop using the Kernel.select method
     def server_loop(server)
       sockets = [server]
-      while true
+      loop do
         ready = select(sockets)
         readable = ready[0]
         readable.each do |socket|
@@ -53,7 +54,7 @@ module Oliver
           if socket == server
             client = server.accept
             sockets << client
-            client.puts "Handler service v0.01 running on #{Socket.gethostname}"
+            client.puts "Handler service v0.1 running on #{Socket.gethostname}"
           else
             input = socket.gets
             if !input
@@ -61,7 +62,6 @@ module Oliver
               socket.close
               next
             end
-            socket.puts "Handler service acceppt command #{input}"# So reverse input and send it back
             handler.pool << input.chop!
           end
 

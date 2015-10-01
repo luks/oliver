@@ -12,7 +12,7 @@ module Oliver
     attr_accessor :pool
 
     def initialize
-      @pool  = ThreadPool.new(1, 4) do |params|
+      @pool  = ThreadPool.new(1, 8) do |params|
         Thread.abort_on_exception=true
         a, b = params.split(":")
         par = b.split(" ")
